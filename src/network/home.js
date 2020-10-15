@@ -6,3 +6,15 @@ export function getHomeMultidata() {
     method: "get"
   });
 }
+
+// 获取首页商品的数据
+export function getHomeGoods(type, page) {
+  return request({
+    url: "/home/data",
+    method: "get",
+    params: {
+      type,
+      page
+    }
+  });
+}

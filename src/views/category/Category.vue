@@ -1,9 +1,17 @@
 <template>
-  <div>这是分类的页面</div>
+  <div>
+    分类页面
+  </div>
 </template>
 
 <script>
-export default {}
+export default {
+  components: {},
+  data() {
+    return {};
+  },
+  methods: {}
+};
 </script>
 
-<style></style>
+<style scoped></style>
