@@ -12,27 +12,27 @@
 export default {
   props: {
     path: {
-      type: String,
+      type: String
     },
     activeColor: {
       type: String,
-      default: "#f57777",
-    },
+      default: "#f57777"
+    }
   },
   methods: {
     itemClick() {
-      this.$router.push(this.path).catch((err) => err)
-    },
+      this.$router.push(this.path).catch(err => err);
+    }
   },
   computed: {
     isActive() {
-      return this.$route.path === this.path
+      return this.$route.path === this.path;
     },
     activeStyle() {
-      return this.isActive ? { color: this.activeColor } : {}
-    },
-  },
-}
+      return this.isActive ? { color: this.activeColor } : {};
+    }
+  }
+};
 </script>
 
 <style>
@@ -41,6 +41,7 @@ export default {
   text-align: center;
   align-content: center;
   font-size: 12px;
+  padding-top: 3px;
 }
 
 .root img {

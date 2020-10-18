@@ -10,7 +10,7 @@
     />
     <scroll
       class="home-scroll"
-      ref="homeScrollRef"
+      ref="scrollRef"
       :probeType="3"
       :pullUpLoad="true"
       @scroll="getScroll"
@@ -40,14 +40,14 @@ import Scroll from "components/common/scroll/Scroll";
 
 import TabControl from "components/content/tabcontrol/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
-import BackTop from "components/content/backtop/BackTop";
 
 import HomeSwiper from "./childComponents/HomeSwiper";
 import HomeRecommend from "./childComponents/HomeRecommend";
 import HomePopular from "./childComponents/HomePopular";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
-import { debounce } from "common/utils";
+import { itemImageMixin, backTopMixin } from "common/mixin";
+
 export default {
   name: "Home",
   data() {
@@ -61,11 +61,12 @@ export default {
       },
       goodsKeys: ["pop", "new", "sell"],
       currentType: "pop",
-      isShow: false,
       isTabControlShow: false,
-      tabControlHeight: 500
+      tabControlHeight: 0,
+      homeLeaveY: 0
     };
   },
+  mixins: [itemImageMixin, backTopMixin],
   components: {
     NavBar,
     HomeSwiper,
@@ -73,8 +74,7 @@ export default {
     HomePopular,
     TabControl,
     GoodsList,
-    Scroll,
-    BackTop
+    Scroll
   },
   created() {
     this.getHomeMultidata();
@@ -82,11 +82,14 @@ export default {
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
   },
-  mounted() {
-    const homeRefresh = debounce(this.$refs.homeScrollRef.refresh, 500);
-    this.$bus.$on("itemImageLoad", () => {
-      homeRefresh();
-    });
+  mounted() {},
+  activated() {
+    this.$refs.scrollRef.refresh();
+    this.$refs.scrollRef.scrollTo(0, this.homeLeaveY, 0);
+  },
+  deactivated() {
+    this.homeLeaveY = this.$refs.scrollRef.getLeaveY();
+    this.$bus.$off("itemImageLoad", this.refreshFunc);
   },
   methods: {
     getHomeMultidata() {
@@ -110,12 +113,12 @@ export default {
       this.isShow = -position.y > 1000;
       this.isTabControlShow = -position.y > this.tabControlHeight;
     },
-    backTop() {
-      this.$refs.homeScrollRef.scrollTo(0, 0);
-    },
+    // backTop() {
+    //   this.$refs.scrollRef.scrollTo(0, 0);
+    // },
     getPullingUp() {
       this.getHomeGoods(this.currentType);
-      this.$refs.homeScrollRef.finishPullUp();
+      this.$refs.scrollRef.finishPullUp();
     },
     homeSwiperLoad() {
       this.tabControlHeight = this.$refs.tabConrtolRef.$el.offsetTop;

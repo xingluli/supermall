@@ -1,8 +1,6 @@
 <template>
-  <div class="goods-list-item">
-    <a :href="good.link">
-      <img :src="good.show.img" alt="" @load="imageLoad" />
-    </a>
+  <div class="goods-list-item" @click="itemClick">
+    <img :src="imgSrc" alt="" @load="imageLoad" class="goodsImage" />
     <div class="goods-content">
       <p>{{ good.title }}</p>
       <span>￥</span>
@@ -26,6 +24,19 @@ export default {
   methods: {
     imageLoad() {
       this.$bus.$emit("itemImageLoad");
+    },
+    itemClick() {
+      this.$router.push({
+        path: "/detail",
+        query: {
+          iid: this.good.iid
+        }
+      });
+    }
+  },
+  computed: {
+    imgSrc() {
+      return this.good.image || this.good.show.img;
     }
   }
 };
@@ -68,7 +79,7 @@ export default {
   margin: 0px 5px 0px 0px;
 }
 
-.goods-list-item a img {
+.goods-list-item .goodsImage {
   width: 100%;
   border-radius: 3%;
 }
